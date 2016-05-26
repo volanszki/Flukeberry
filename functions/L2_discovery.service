@@ -1,0 +1,37 @@
+#!/bin/bash
+
+basedir="$(cat ../settings/basedir)"
+funcdir="$basedir/functions"
+tempdir="$basedir/tmp"
+settdir="$basedir/settings"
+datetime=$(date '+%Y/%m/%d - %H:%M(%S)')
+ethernet0=$(cat $settdir/ethernet0)
+
+#export XAUTHORITY=/home/pi/.Xauthority
+#export DISPLAY=:0.0
+prev="yes"
+sleeptime=$(cat $settdir/sleeptime)
+
+while true; do
+
+act=$(sudo ethtool $ethernet0 | grep "Link detected" | awk '{print $3}')
+
+if [ "$prev" == "no" ] && [ "$act" == "yes" ]; then
+    prev="yes"
+    $funcdir/fluke.sh
+    sleep $sleeptime
+elif [ "$prev" == "yes" ] && [ "$act" == "yes" ]; then
+    sleep $sleeptime
+elif [ "$prev" == "no" ] && [ "$act" == "no" ]; then
+    sleep $sleeptime
+elif [ "$prev" == "yes" ] && [ "$act" == "no" ]; then
+#    pid=$(ps aux | grep "display" | grep -v grep | awk '{print $2}')
+#    sudo kill -9 $pid
+    sudo killall display
+    prev="no"
+    sleep $sleeptime
+else
+    sleep $sleeptime
+fi
+
+done

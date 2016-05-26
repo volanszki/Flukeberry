@@ -1,0 +1,352 @@
+#!/bin/bash 
+
+basedir="/data/flukeberry"
+GTKDIALOG=gtkdialog 
+
+export SHOW_THE_RESULT='
+<window title="Image" icon-name="gtk-about" resizable="true" width-request="480" height-request="295">
+    <vbox space-fill="false" space-expand="false" homogeneous="False">
+
+        <hbox space-fill="true" space-expand="true" homogeneous="True">
+            <pixmap>
+		<input file>'$basedir'/last/result.jpg</input>
+            </pixmap>
+        </hbox>
+
+        <hbox space-fill="true" space-expand="true" homogeneous="true">
+                <button>
+                    <label>Close</label>
+                    <action function="closewindow">SHOW_THE_RESULT</action>
+		</button>
+        </hbox>
+    </vbox>
+    <variable>SHOW_THE_RESULT</variable>
+</window>
+'
+
+export SHUTDOWN='
+<window title="Are you sure?" icon-name="gtk-about" resizable="true" width-request="240" height-request="120">
+
+    <hbox space-fill="true" space-expand="true" homogeneous="true">
+        <hbox space-fill="true" space-expand="true" homogeneous="true">
+            <button image-position="2">
+                <width>48</width>
+                <input file>'$basedir'/icons/back.png</input>
+                <label>Go back</label>
+                <action function="closewindow">SHUTDOWN</action>
+	    </button>
+        </hbox>
+        <hbox space-fill="true" space-expand="true" homogeneous="true">
+            <button image-position="2">
+                <width>48</width>
+                <input file>'$basedir'/icons/shutdown2.png</input>
+                <label>Shutdown</label>
+                <action>cd '$basedir'/functions && ./main_shutdown.sh</action>
+	    </button>
+        </hbox>
+    </hbox>
+
+    <variable>SHUTDOWN</variable>
+</window>
+'
+
+
+
+export MAIN_DIALOG=' 
+<window title="flukeberry checker" icon-name="gtk-about" resizable="true" width-request="480" height-request="295"> 
+    <notebook labels="Fluke-checks|Keyboard|Other tests|Settings"> 
+        <vbox> 
+            <hbox space-fill="true" space-expand="true" homogeneous="True">
+                <frame Auto-checking>
+                    <hbox space-fill="true" space-expand="true" homogeneous="True">
+                    
+                        <button image-position="0" homogeneous="true">
+                            <width>32</width>
+                            <input file>'$basedir'/icons/on.png</input>
+                            <label>"ENABLE"</label> 
+                            <action>cd '$basedir'/functions && ./main_autocheck-enable.sh | zenity --text-info  --width=300 --height=240 --title "Auto-checker status"</action> 
+                        </button>
+                        
+                    </hbox>
+                    <vbox space-fill="true" space-expand="true" homogeneous="True">
+                    
+                        <button image-position="0" homogeneous="true">
+                            <width>32</width>
+                            <input file>'$basedir'/icons/off.png</input>
+                            <label>DISABLE</label> 
+                            <action>cd '$basedir'/functions && ./main_autocheck-disable.sh | zenity --text-info  --width=300 --height=240 --title "Auto-checker status"</action>
+                        </button>
+                        
+                    </vbox>
+                </frame>
+                <frame Info>
+                    <hbox space-fill="true" space-expand="true" homogeneous="True">
+                        <button image-position="0" homogeneous="true">
+                            <width>40</width>
+                            <input file>'$basedir'/icons/info.png</input>
+                            <label>"Show interfaces"</label> 
+                            <action>cd '$basedir'/functions && ./main_int_info.sh | zenity --text-info  --width=480 --height=295 --title "Interfaces"</action> 
+                        </button>
+                    </hbox>
+                    <hbox space-fill="true" space-expand="true" homogeneous="True">
+                        <button image-position="0" homogeneous="true">
+                            <width>40</width>
+                            <input file>'$basedir'/icons/wireless.png</input>
+                            <label>"WiFi scanner"</label> 
+                            <action>cd '$basedir'/functions && ./main_scan_wlans.sh | zenity --text-info  --width=480 --height=295 --title "WiFi scanner"</action> 
+                        </button>
+                    </hbox>
+                </frame>
+            </hbox> 
+            <hbox space-fill="true" space-expand="true" homogeneous="True">
+                <frame Quick-check>
+                    <hbox space-fill="true" space-expand="true" homogeneous="True">
+                    
+                        <button image-position="2" homogeneous="true">
+                            <width>50</width>
+                            <input file>'$basedir'/icons/fluke2.png</input>
+                            <label>Fluke it now!</label> 
+			    <action>cd '$basedir'/functions && ./fluke.sh</action>
+                            <action function="launch">SHOW_THE_RESULT</action>
+                        </button>
+                        
+                        <button image-position="2" homogeneous="true"> 
+                            <width>40</width>
+                            <input file>'$basedir'/icons/F2.png</input>
+                            <label>Show the last</label> 
+                            <action function="launch">SHOW_THE_RESULT</action>
+                        </button>
+                        
+                    </hbox>
+
+                </frame>
+                <frame Others>
+                    <hbox space-fill="true" space-expand="true" homogeneous="True">
+                    
+                        <button image-position="2" homogeneous="true">
+                            <width>60</width>
+                            <input file>'$basedir'/icons/sync2.png</input>
+                            <label>Sync</label> 
+                            <action>cd '$basedir'/functions && ./main_sync.sh | zenity --text-info  --width=480 --height=295 --title "Sync status"</action> 
+                        </button>
+                    
+                        <button image-position="2" homogeneous="true">
+                            <width>48</width>
+                            <input file>'$basedir'/icons/exit1.png</input>
+                            <label>EXIT</label> 
+                            <action function="exit">MAIN_DIALOG</action>
+                        </button>
+
+                        <button image-position="2" homogeneous="true">
+                            <width>48</width>
+                            <input file>'$basedir'/icons/shutdown.png</input>
+                            <label>Shutdown</label>
+                            <action function="launch">SHUTDOWN</action>
+                        </button>
+
+                    </hbox>
+
+                </frame>
+            </hbox>
+            
+        </vbox> 
+        <vbox space-fill="true" space-expand="true" homogeneous="True">
+            <frame Current patch port: >
+            <hbox space-fill="true" space-expand="true" homogeneous="False">
+                <text wrap="false" xalign="2">
+                    <variable>ENTRY</variable>
+                    <input file>'$basedir'/keyboard/patch.port</input>
+                </text>
+            </hbox>
+            <hbox space-fill="true" space-expand="true" homogeneous="False">
+                <button><label>Load</label><action>cd '$basedir'/keyboard && cat patch.save > patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>Save</label><action>cd '$basedir'/keyboard && cp patch.port patch.save</action><action function="refresh">ENTRY</action></button>
+                <button><label>Clear</label><action>cd '$basedir'/keyboard && echo -n "" > patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>Backspace</label><action>cd '$basedir'/keyboard && ./rev.sh</action><action function="refresh">ENTRY</action></button>
+            </hbox>
+            <hbox space-fill="true" space-expand="true" homogeneous="True">
+                <button><label>0</label><action>cd '$basedir'/keyboard && echo -n 0 >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>1</label><action>cd '$basedir'/keyboard && echo -n 1 >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>2</label><action>cd '$basedir'/keyboard && echo -n 2 >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>3</label><action>cd '$basedir'/keyboard && echo -n 3 >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>4</label><action>cd '$basedir'/keyboard && echo -n 4 >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>5</label><action>cd '$basedir'/keyboard && echo -n 5 >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>6</label><action>cd '$basedir'/keyboard && echo -n 6 >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>7</label><action>cd '$basedir'/keyboard && echo -n 7 >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>8</label><action>cd '$basedir'/keyboard && echo -n 8 >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>9</label><action>cd '$basedir'/keyboard && echo -n 9 >> patch.port</action><action function="refresh">ENTRY</action></button>
+            </hbox>
+            <hbox space-fill="true" space-expand="true" homogeneous="True">
+                <button><label>Q</label><action>cd '$basedir'/keyboard && echo -n Q >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>W</label><action>cd '$basedir'/keyboard && echo -n W >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>E</label><action>cd '$basedir'/keyboard && echo -n E >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>R</label><action>cd '$basedir'/keyboard && echo -n R >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>T</label><action>cd '$basedir'/keyboard && echo -n T >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>Z</label><action>cd '$basedir'/keyboard && echo -n Z >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>U</label><action>cd '$basedir'/keyboard && echo -n U >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>I</label><action>cd '$basedir'/keyboard && echo -n I >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>O</label><action>cd '$basedir'/keyboard && echo -n O >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>P</label><action>cd '$basedir'/keyboard && echo -n P >> patch.port</action><action function="refresh">ENTRY</action></button>
+                
+            </hbox>
+            <hbox space-fill="true" space-expand="true" homogeneous="True">
+                <button><label>A</label><action>cd '$basedir'/keyboard && echo -n A >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>S</label><action>cd '$basedir'/keyboard && echo -n S >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>D</label><action>cd '$basedir'/keyboard && echo -n D >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>F</label><action>cd '$basedir'/keyboard && echo -n F >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>G</label><action>cd '$basedir'/keyboard && echo -n G >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>H</label><action>cd '$basedir'/keyboard && echo -n H >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>J</label><action>cd '$basedir'/keyboard && echo -n J >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>K</label><action>cd '$basedir'/keyboard && echo -n K >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>L</label><action>cd '$basedir'/keyboard && echo -n L >> patch.port</action><action function="refresh">ENTRY</action></button>
+            </hbox>
+            <hbox space-fill="true" space-expand="true" homogeneous="True">
+                <button><label>Y</label><action>cd '$basedir'/keyboard && echo -n Y >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>X</label><action>cd '$basedir'/keyboard && echo -n X >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>C</label><action>cd '$basedir'/keyboard && echo -n C >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>V</label><action>cd '$basedir'/keyboard && echo -n V >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>B</label><action>cd '$basedir'/keyboard && echo -n B >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>N</label><action>cd '$basedir'/keyboard && echo -n N >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>M</label><action>cd '$basedir'/keyboard && echo -n M >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>-</label><action>cd '$basedir'/keyboard && echo -n "-" >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>/</label><action>cd '$basedir'/keyboard && echo -n "/" >> patch.port</action><action function="refresh">ENTRY</action></button>
+                <button><label>?</label><action>cd '$basedir'/keyboard && echo -n "?" >> patch.port</action><action function="refresh">ENTRY</action></button>
+            </hbox>
+            </frame>
+        </vbox>
+
+        <vbox>
+            <hbox space-fill="true" space-expand="false" homogeneous="True">
+                <frame Speedtest>
+                    <hbox space-fill="true" space-expand="false" homogeneous="True">
+
+                        <button>
+                            <label>Run speedtest-cli</label> 
+                            <action>speedtest-cli | zenity --text-info  --width=480 --height=295 --title "Speedtest result"</action> 
+                        </button>
+
+                    </hbox>
+                </frame>
+            </hbox>
+        </vbox>
+
+        <vbox>
+            <hbox homogeneous="true">
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <text xalign="0"><label>Current timeout:</label></text>
+                </hbox>
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <text xalign="0">
+                        <variable>WAIT_TIME</variable>
+                        <input file>'$basedir'/settings/timeout</input>
+                    </text>
+                </hbox>
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <button><label>Decrease</label><action>cd '$basedir'/functions && ./settings_timeout_decrease.sh</action><action function="refresh">WAIT_TIME</action></button>
+                    <button><label>Increase</label><action>cd '$basedir'/functions && ./settings_timeout_increase.sh</action><action function="refresh">WAIT_TIME</action></button>
+                </hbox>
+            </hbox>
+            <hbox homogeneous="true">
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <text xalign="0"><label>Auto-checker sleeptime:</label></text>
+                </hbox>
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <text xalign="0">
+                        <variable>SLEEP_TIME</variable>
+                        <input file>'$basedir'/settings/sleeptime</input>
+                    </text>
+                </hbox>
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <button><label>Decrease</label><action>cd '$basedir'/functions && ./settings_sleeptime.sh -</action><action function="refresh">SLEEP_TIME</action></button>
+                    <button><label>Increase</label><action>cd '$basedir'/functions && ./settings_sleeptime.sh +</action><action function="refresh">SLEEP_TIME</action></button>
+                </hbox>
+            </hbox>
+            <hbox homogeneous="true">
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <text xalign="0"><label>Base directory:</label></text>
+                </hbox>
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <text xalign="0">
+                        <variable>BASEDIR</variable>
+                        <input file>'$basedir'/settings/basedir</input>
+                    </text>
+                </hbox>
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <button><label>Change it from CLI!</label><action>cd '$basedir'/functions && ./settings_load_from_keyboard.sh > '$basedir'/settings/basedir.new</action><action function="refresh">BASEDIR</action></button>
+                </hbox>
+            </hbox>
+            <hbox homogeneous="true">
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <text xalign="0"><label>Ethernet interface:</label></text>
+                </hbox>
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <text xalign="0">
+                        <variable>ETHERNET</variable>
+                        <input file>'$basedir'/settings/ethernet0</input>
+                    </text>
+                </hbox>
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <button><label>Load from keyboard</label><action>cd '$basedir'/functions && ./settings_load_from_keyboard.sh > '$basedir'/settings/ethernet0</action><action function="refresh">ETHERNET</action></button>
+                </hbox>
+            </hbox>
+            <hbox homogeneous="true">
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <text xalign="0"><label>Wireless interface:</label></text>
+                </hbox>
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <text xalign="0">
+                        <variable>WIRELESS</variable>
+                        <input file>'$basedir'/settings/wireless0</input>
+                    </text>
+                </hbox>
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <button><label>Load from keyboard</label><action>cd '$basedir'/functions && ./settings_load_from_keyboard.sh > '$basedir'/settings/wireless0</action><action function="refresh">WIRELESS</action></button>
+                </hbox>
+            </hbox>
+            <hbox homogeneous="true">
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <text xalign="0"><label>Hostname:</label></text>
+                </hbox>
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <text  xalign="0">
+                        <variable>FLUKEBERRY_NAME</variable>
+                        <input file>'$basedir'/settings/hostname</input>
+                    </text>
+                </hbox>
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <button><label>Load from keyboard</label><action>cd '$basedir'/functions && ./settings_load_from_keyboard.sh > '$basedir'/settings/hostname</action><action function="refresh">FLUKEBERRY_NAME</action></button>
+                </hbox>
+            </hbox>
+            <hbox homogeneous="true">
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <text xalign="0"><label>Sync server:</label></text>
+                </hbox>
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <text  xalign="0">
+                        <variable>SYNCHOST</variable>
+                        <input file>'$basedir'/settings/syncserver</input>
+                    </text>
+                </hbox>
+                <hbox space-fill="true" space-expand="true" homogeneous="false">
+                    <button><label>Load from keyboard</label><action>cd '$basedir'/functions && ./settings_load_from_keyboard.sh > '$basedir'/settings/syncserver</action><action function="refresh">SYNCHOST</action></button>
+                </hbox>
+            </hbox>
+
+
+        </vbox>
+
+
+
+
+
+
+    </notebook>
+</window>
+' 
+
+case $1 in 
+	-d | --dump) echo -n "$MAIN_DIALOG" ;; 
+	*) $GTKDIALOG --program=MAIN_DIALOG --center ;; 
+
+esac
+
